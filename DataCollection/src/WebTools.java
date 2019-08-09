@@ -89,10 +89,7 @@ public class WebTools {
         List<String> links = getAllProductLinks();
         long end = System.nanoTime();
 
-
-        for (String link : links) {
-            System.out.println(link);
-        }
+        System.out.println("TOTAL PRODUCTS: " + links.size());
 
         System.out.println("\n\n\nTime Elapsed: " + (end - start) * 1E-9 + " seconds");
     }
