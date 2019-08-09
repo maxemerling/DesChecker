@@ -8,7 +8,8 @@ import java.util.List;
 
 public class WebTools {
 
-    private static final String SITEMAP = "https://heroarts.com/tools/sitemap/?page=";
+    public static final String HEROARTS = "https://heroarts.com";
+    private static final String SITEMAP_EXT = "/tools/sitemap/?page=", SITEMAP = HEROARTS + SITEMAP_EXT;
 
 
     /**
@@ -39,27 +40,60 @@ public class WebTools {
 
     /* methods for parsing sitemap */
 
-    private static final String SECTION_HEADER = "list-row type_products", SECTION_END = "</ul>";
-    private static String getSection(String html) {
-        html = html.substring(html.indexOf(SECTION_HEADER));
-        html = html.substring(0, html.indexOf(SECTION_END));
-
-        return html;
+    private static final String INDICATOR = "&hellip;";
+    private static final char END = '"';
+    public static int getMaxPage() throws IOException {
+        String html = getHTML(SITEMAP);
+        int marker;
+        return Integer.parseInt(html.substring(marker = html.indexOf(SITEMAP_EXT, html.indexOf(INDICATOR)) + SITEMAP_EXT.length(), html.indexOf(END, marker)));
     }
 
-    private static final String ITEM_START = "<a href=\"/", ITEM_END = "/a>";
-    private static List<String> getSectionLines(String html) {
+    private static final String SECTION_HEADER = "list-row type_products", SECTION_END = "<div class";
+    private static String getSection(String html) {
+        int marker;
+        return html = html.substring(marker = html.indexOf(SECTION_HEADER), html.indexOf(SECTION_END, marker));
+    }
+
+    private static final String LINK_START = "<a href=\"";
+    private static List<String> getProductLinks(String html) {
         String section = getSection(html);
 
         List<String> lines = new ArrayList<>();
 
-        int nextRowIdx;
-        while ((nextRowIdx = section.indexOf(ITEM_START)) != -1) {
-            int rowEndIdx = section.indexOf(ITEM_END, nextRowIdx) - 1;
-            lines.add(section.substring(nextRowIdx + ITEM_START.length(), rowEndIdx));
-            section = section.substring(rowEndIdx);
+        int next;
+        while ((next = section.indexOf(LINK_START)) != -1) {
+            int end = section.indexOf(END, next += LINK_START.length()) - 1;
+            lines.add(HEROARTS + section.substring(next, end));
+            section = section.substring(end);
         }
 
         return lines;
+    }
+
+    private static List<String> getAllProductLinks() {
+        try {
+            List<String> links = new ArrayList<>();
+            int maxPage = getMaxPage();
+            for (int page = 1; page <= maxPage; page++) {
+                links.addAll(getProductLinks(getHTML(SITEMAP + page)));
+            }
+            return links;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        long start = System.nanoTime();
+        List<String> links = getAllProductLinks();
+        long end = System.nanoTime();
+
+
+        for (String link : links) {
+            System.out.println(link);
+        }
+
+        System.out.println("\n\n\nTime Elapsed: " + (end - start) * 1E-9 + " seconds");
     }
 }
