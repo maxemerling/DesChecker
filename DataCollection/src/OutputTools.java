@@ -21,9 +21,13 @@ class OutputTools {
                 Item item = map.get(link);
                 writer.write(HEADER + item.getNumber() + SEPARATOR + item.getName());
                 writer.newLine();
+                writer.newLine();
                 writer.write(link);
                 writer.newLine();
+                writer.newLine();
                 writer.write(item.getDescription());
+                writer.newLine();
+                writer.newLine();
                 writer.newLine();
             }
         } catch (IOException e) {
