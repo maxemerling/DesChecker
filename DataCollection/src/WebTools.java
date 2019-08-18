@@ -71,7 +71,14 @@ class WebTools {
             String number = html.substring(marker = html.indexOf(ITEM_START) + ITEM_START.length(), marker = html.indexOf(" ", marker));
             String name = html.substring(marker + 1, html.indexOf(ITEM_END, marker));
 
-            String description = html.substring(marker = html.indexOf(DES_START, html.indexOf(DES_INDICATOR)) + DES_START.length(), html.indexOf(DES_END, marker));
+            //description
+            marker = html.indexOf(DES_INDICATOR);
+            int temp;
+            String snippet;
+            while ((snippet = html.substring(marker = html.indexOf('>', marker) + 1, temp = html.indexOf('<', marker))).isBlank() || snippet.compareToIgnoreCase("Description") == 0) {
+                marker = temp;
+            }
+            String description = html.substring(marker, temp).trim();
 
             return new Item(number, name, description);
         } catch (IOException e) {

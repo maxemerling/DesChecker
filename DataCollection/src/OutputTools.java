@@ -6,7 +6,7 @@ import java.util.Map;
 
 class OutputTools {
 
-    private static final String HEADER = "**** ";
+    private static final String HEADER = "#### ";
     private static final char SEPARATOR = '|';
 
     /**

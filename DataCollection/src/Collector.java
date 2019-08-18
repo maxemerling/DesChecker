@@ -23,7 +23,7 @@ public class Collector implements Runnable {
     public void run() {
         int maxPage = WebTools.getMaxPage();
 
-        ExecutorService executor = Executors.newCachedThreadPool();
+        ExecutorService executor = Executors.newFixedThreadPool(maxPage);
 
         for (int i = 1; i <= maxPage; i++) {
             final String html = WebTools.getPage(i);
@@ -43,6 +43,8 @@ public class Collector implements Runnable {
             e.printStackTrace();
         }
 
+        System.out.println("\nWriting Data...\n");
+
         OutputTools.writeItemMap(entries, OUTPUT_PATH);
     }
 
@@ -51,7 +53,8 @@ public class Collector implements Runnable {
      * @param html the html source code of a given sitemap page
      */
     private void processSiteMapHTML(String html) {
-        ExecutorService subService = Executors.newCachedThreadPool();
+        //ExecutorService subService = Executors.newCachedThreadPool();
+        ExecutorService subService = Executors.newSingleThreadExecutor();
 
         String section = WebTools.getSection(html);
 

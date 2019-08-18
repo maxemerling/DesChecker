@@ -5,6 +5,6 @@ public class Main {
         Collector collector = new Collector();
         collector.run();
 
-        System.out.println("Time elapsed: " + (int) ((System.nanoTime() - start) * 1E-9) + " seconds.");
+        System.out.println("\n\nTime elapsed: " + (int) ((System.nanoTime() - start) * 1E-9) + " seconds.");
     }
 }
